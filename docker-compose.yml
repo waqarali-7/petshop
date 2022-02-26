@@ -1,0 +1,91 @@
+version: '2'
+
+networks:
+  petshop_backend:
+
+volumes:
+  phpmyadmin_data:
+
+services:
+  php:
+    build:
+      context: ./.docker/php
+    container_name: petshop_php
+    entrypoint:
+      - php-fpm
+    networks:
+      - petshop_backend
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    volumes:
+      - ./:/var/www/html:rw
+      - ./.docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+  mysql:
+    image: mysql:${MYSQL_VERSION}
+    container_name: petshop_mysql
+    restart: always
+    env_file: .env
+    environment:
+      - MYSQL_DATABASE:${DB_DATABASE}
+      - MYSQL_ROOT_PASSWORD:${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER:${DB_USERNAME}
+      - MYSQL_PASSWORD:${DB_PASSWORD}
+    ports:
+      - '3307:3306'
+    networks:
+      - petshop_backend
+    volumes:
+      - ./.data/db/mysql:/var/lib/mysql
+      - ./.docker/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+  phpmyadmin:
+    depends_on:
+      - mysql
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8002:80'
+    environment:
+      PMA_HOST: mysql
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: dev
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - phpmyadmin_data:/var/www/html/
+    networks:
+      - petshop_backend
+  web:
+    image: nginx:alpine
+    container_name: petshop_nginx
+    networks:
+      - petshop_backend
+    volumes_from:
+      - php
+    volumes:
+      - ./.docker/nginx/main:/etc/nginx/conf.d/default.conf
+      - ./.docker/nginx/local/api:/etc/nginx/conf.d/api.conf
+      - phpmyadmin_data:/var/www/html/phpmyadmin_data:ro
+    ports:
+      - '8001:80'
+    depends_on:
+      - mysql
+      - phpmyadmin
+    links:
+      - mysql
+      - phpmyadmin
+  composer_installation:
+    container_name: petshop_composer_installation
+    image: composer
+    working_dir: /var/www/html
+    depends_on:
+      - php
+      - mysql
+    links:
+      - php
+      - mysql
+    volumes:
+      - ./:/var/www/html:rw
+      - ./.data/db/mysql:/var/lib/mysql
+    command: sh -c "composer install --ignore-platform-reqs && php artisan key:generate"

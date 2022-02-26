@@ -38,4 +38,8 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+<<<<<<< HEAD
 >>>>>>> 2cfd74e (laravel fresh installation)
+=======
+/.data
+>>>>>>> 6e9da72 (feat: docker setup along with phpmyadmin container)
