@@ -22,7 +22,7 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::group(['prefix' => 'admin'], function () {
         Route::post('/login', 'App\Http\Controllers\AuthUserController@login');
-        Route::group(['middleware' => ['auth:api']], function () {
+        Route::group(['middleware' => ['auth:api', 'admin:api']], function () {
             Route::post('/logout', 'App\Http\Controllers\AuthUserController@logout');
             Route::post('/create', 'App\Http\Controllers\UserController@createAdminUser');
             Route::GET('/user-listing', 'App\Http\Controllers\UserController@getAllAdminUsers');
