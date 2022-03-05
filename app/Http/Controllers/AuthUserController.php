@@ -23,6 +23,10 @@ class AuthUserController extends BaseController
         $user = User::where("email", $request->email)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
+
+            $user->last_login_at = date("Y-m-d H:i:s");
+            $user->save();
+
             $token = $user->createToken('user_token')->accessToken;
             return response()->json(['token' => $token]);
         } else {
