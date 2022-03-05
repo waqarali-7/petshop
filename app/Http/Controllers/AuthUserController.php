@@ -12,28 +12,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use JetBrains\PhpStorm\NoReturn;
 
-class AuthUserController extends Controller
+class AuthUserController extends BaseController
 {
-    /**
-     * @param SignupRequest $request
-     * @return JsonResponse
-     */
-    #[NoReturn] public function register(SignupRequest $request): JsonResponse
-    {
-        dd("hi");
-        $input = $request->all();
-
-        $input['password'] = Hash::make($request->password);
-
-        $user = User::create($input);
-
-        $accessToken = $user->createToken('authToken')->accessToken;
-
-        $successResponse ['token'] = $accessToken;
-
-        return response()->json($successResponse, 201);
-    }
-
     /**
      * @param Request $request
      * @return JsonResponse
@@ -54,7 +34,7 @@ class AuthUserController extends Controller
      * @param Request $request
      * @return Response|Application|ResponseFactory
      */
-    public function logout(Request $request)
+    public function logout(Request $request): Response|Application|ResponseFactory
     {
         $token = $request->user()->token();
         $token->revoke();
