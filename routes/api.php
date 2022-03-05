@@ -35,6 +35,8 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/orders', 'App\Http\Controllers\OrderController@getUserOrders');
             Route::post('/create', 'App\Http\Controllers\UserController@createUser');
             Route::post('/logout', 'App\Http\Controllers\AuthUserController@logout');
+            Route::post('/forgot-password', 'App\Http\Controllers\AuthUserController@forgotPassword');
+            Route::post('/reset-password-token', 'App\Http\Controllers\AuthUserController@resetPassword');
             Route::put('/edit', 'App\Http\Controllers\UserController@edit');
             Route::get('/{user}', 'App\Http\Controllers\UserController@getUser');
             Route::delete('/{user}', 'App\Http\Controllers\UserController@remove');
