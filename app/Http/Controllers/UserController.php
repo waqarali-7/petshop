@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SignupRequest;
+use App\Http\Requests\CreateUserRequest;
 use App\Models\User;
 use App\Repositories\Eloquent\UserRepository;
 use App\Transformers\UserTransformer;
@@ -70,10 +70,10 @@ class UserController extends BaseController
     }
 
     /**
-     * @param SignupRequest $request
+     * @param CreateUserRequest $request
      * @return JsonResponse
      */
-    public function createAdminUser(SignupRequest $request): JsonResponse
+    public function createAdminUser(CreateUserRequest $request): JsonResponse
     {
         $input = $request->all();
 
@@ -83,8 +83,31 @@ class UserController extends BaseController
 
         try {
             $user = User::create($input);
-            $successResponse ['user'] = "$user";
-            $successResponse ['message'] = "User Created Successfully!";
+
+            return $this->withItem($user, $this->transformer);
+
+        } catch (\Exception $exception) {
+
+            return $this->withException([
+                'message' => $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param CreateUserRequest $request
+     * @return JsonResponse
+     */
+    public function createUser(CreateUserRequest $request): JsonResponse
+    {
+        $input = $request->all();
+
+        $input['password'] = Hash::make($request->password);
+        $input['uuid'] = Str::uuid();;
+        $input['is_admin'] = false;
+
+        try {
+            $user = User::create($input);
 
             return $this->withItem($user, $this->transformer);
 

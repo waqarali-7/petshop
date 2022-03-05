@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use JetBrains\PhpStorm\ArrayShape;
 
-class SignupRequest extends BaseRequest
+class CreateUserRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
