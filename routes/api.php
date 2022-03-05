@@ -33,6 +33,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/login', 'App\Http\Controllers\AuthUserController@login');
         Route::group(['middleware' => ['auth:api']], function () {
             Route::get('/{user}', 'App\Http\Controllers\UserController@getUser');
+            Route::delete('/{user}', 'App\Http\Controllers\UserController@remove');
         });
     });
 

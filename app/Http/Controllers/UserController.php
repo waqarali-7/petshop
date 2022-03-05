@@ -54,6 +54,22 @@ class UserController extends BaseController
     }
 
     /**
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function remove(User $user): JsonResponse
+    {
+        if ($user && $user->is_admin) {
+            return $this->withException(['Unauthorized']);
+        }
+        $userDeleted = $this->repository->deleteById($user);
+
+        return $this->withArray([
+            $userDeleted ? 'User deleted!' : 'User could not be deleted!'
+        ]);
+    }
+
+    /**
      * @param SignupRequest $request
      * @return JsonResponse
      */
