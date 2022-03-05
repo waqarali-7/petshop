@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateProfileRequest;
 use App\Models\User;
 use App\Repositories\Eloquent\UserRepository;
 use App\Transformers\UserTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use League\Fractal\TransformerAbstract;
@@ -117,5 +119,16 @@ class UserController extends BaseController
                 'message' => $exception->getMessage()
             ]);
         }
+    }
+
+    /**
+     * @param UpdateProfileRequest $request
+     * @return JsonResponse
+     */
+    public function edit(UpdateProfileRequest $request): JsonResponse
+    {
+        $updatedUser = $this->repository->update($request->all(), Auth::user());
+
+        return $this->withItem($updatedUser, $this->transformer);
     }
 }

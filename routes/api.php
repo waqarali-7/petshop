@@ -34,6 +34,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['middleware' => ['auth:api']], function () {
             Route::get('/orders', 'App\Http\Controllers\OrderController@getUserOrders');
             Route::post('/create', 'App\Http\Controllers\UserController@createUser');
+            Route::post('/logout', 'App\Http\Controllers\AuthUserController@logout');
+            Route::put('/edit', 'App\Http\Controllers\UserController@edit');
             Route::get('/{user}', 'App\Http\Controllers\UserController@getUser');
             Route::delete('/{user}', 'App\Http\Controllers\UserController@remove');
         });

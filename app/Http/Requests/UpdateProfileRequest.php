@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-class CreateUserRequest extends BaseRequest
+class UpdateProfileRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,7 +18,6 @@ class CreateUserRequest extends BaseRequest
             'email'             => 'required|string|email|unique:users,email',
             'phone_number'      => 'required|string|unique:users,phone_number',
             'password'          => 'required|string|min:6',
-            'confirm_password'  => 'required|same:password',
         ];
     }
 }
