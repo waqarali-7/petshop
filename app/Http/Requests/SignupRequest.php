@@ -13,17 +13,19 @@ class SignupRequest extends BaseRequest
      */
 
     #[ArrayShape([
-        'name'              => "string",
+        'first_name'        => "string",
+        'last_name'         => "string",
         'email'             => "string",
-        'phone'             => "string",
+        'phone_number'      => "string",
         'password'          => "string",
         'confirm_password'  => "string"
     ])] public function rules(): array
     {
         return [
-            'name'              => 'required|string|max:255',
+            'first_name'        => 'required|string|max:255',
+            'last_name'         => 'required|string|max:255',
             'email'             => 'required|string|email|unique:users,email',
-            'phone'             => 'required|string|unique:users,phone',
+            'phone_number'      => 'required|string|unique:users,phone_number',
             'password'          => 'required|string|min:6',
             'confirm_password'  => 'required|same:password',
         ];

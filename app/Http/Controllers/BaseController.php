@@ -56,13 +56,13 @@ class BaseController extends Controller
         return $this;
     }
 
-    public function withPaginator(LengthAwarePaginator $paginator, $transformer = null): Response
+    public function withPaginator(LengthAwarePaginator $paginator, $transformer = null): JsonResponse
     {
         $statusCode = $this->statusCode ?: ResponseCode::HTTP_OK;
         return $this->responder->respondWithPaginator($paginator, $transformer ?: $this->transformer, $statusCode);
     }
 
-    public function withItem($item, $transformer = null): Response
+    public function withItem($item, $transformer = null): JsonResponse
     {
         $statusCode = $this->statusCode ?: ResponseCode::HTTP_OK;
         return $this->responder->respondWithItem($item, $transformer ?: $this->transformer, $statusCode);
@@ -73,7 +73,7 @@ class BaseController extends Controller
         return $this->responder->respondWithEmpty();
     }
 
-    public function withCollection($collection, $transformer = null): Response
+    public function withCollection($collection, $transformer = null): JsonResponse
     {
         $statusCode = $this->statusCode ?: ResponseCode::HTTP_OK;
         return $this->responder->respondWithCollection($collection, $transformer ?: $this->transformer, $statusCode);
@@ -82,6 +82,12 @@ class BaseController extends Controller
     public function withArray(array $data): JsonResponse
     {
         $statusCode = $this->statusCode ?: ResponseCode::HTTP_OK;
+        return $this->responder->respondWithArray($data, $statusCode);
+    }
+
+    public function withException(array $data): JsonResponse
+    {
+        $statusCode = $this->statusCode ?: ResponseCode::HTTP_BAD_REQUEST;
         return $this->responder->respondWithArray($data, $statusCode);
     }
 

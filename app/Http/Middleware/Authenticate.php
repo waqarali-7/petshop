@@ -19,7 +19,7 @@ class Authenticate extends Middleware
         try {
             $this->authenticate($request, $guards);
         }
-        catch (AuthenticationException $exception) {
+        catch (AuthenticationException) {
             return response('Unauthenticated', 401)
                 ->header('Content-Type', 'text/plain');
         }

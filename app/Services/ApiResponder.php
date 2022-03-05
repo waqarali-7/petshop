@@ -62,13 +62,14 @@ class ApiResponder
      * @param Model|null $model
      * @param TransformerAbstract $transformer
      * @param int $statusCode
-     * @return Response
+     * @return JsonResponse
      */
     public function respondWithItem(
         ?Model $model,
         TransformerAbstract $transformer,
         int $statusCode = ResponseCode::HTTP_OK
-    ): Response {
+    ): JsonResponse
+    {
         $transformer = new Item($model, $transformer);
         return $this->respond($transformer, $statusCode);
     }
@@ -87,13 +88,14 @@ class ApiResponder
      * @param Collection $collection
      * @param TransformerAbstract $transformer
      * @param int $statusCode
-     * @return Response
+     * @return JsonResponse
      */
     public function respondWithCollection(
         Collection $collection,
         TransformerAbstract $transformer,
         int $statusCode = ResponseCode::HTTP_OK
-    ): Response {
+    ): JsonResponse
+    {
         $transformer = new \League\Fractal\Resource\Collection($collection, $transformer);
         return $this->respond($transformer, $statusCode);
     }
@@ -109,13 +111,14 @@ class ApiResponder
      * @param LengthAwarePaginator $paginator
      * @param TransformerAbstract $transformer
      * @param int $statusCode
-     * @return Response
+     * @return JsonResponse
      */
     public function respondWithPaginator(
         LengthAwarePaginator $paginator,
         TransformerAbstract $transformer,
         int $statusCode = ResponseCode::HTTP_OK
-    ): Response {
+    ): JsonResponse
+    {
         $books = $paginator->getCollection();
 
         $resource = new \League\Fractal\Resource\Collection($books, $transformer, 'data');
@@ -126,9 +129,9 @@ class ApiResponder
     /**
      * @param ResourceAbstract $resource
      * @param int $statusCode
-     * @return Response
+     * @return JsonResponse
      */
-    protected function respond(ResourceAbstract $resource, int $statusCode = ResponseCode::HTTP_OK): Response
+    protected function respond(ResourceAbstract $resource, int $statusCode = ResponseCode::HTTP_OK): JsonResponse
     {
         $this->parseIncludes();
         foreach ($this->responseMeta as $key => $value) {
@@ -136,7 +139,7 @@ class ApiResponder
         }
         $response = static::$fractal->createData($resource)->toArray();
 
-        return (new Response($response, $statusCode))
+        return (new JsonResponse($response, $statusCode))
             ->header('Content-Type', 'application/json');
     }
 
