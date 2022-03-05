@@ -17,8 +17,8 @@ class UserRepository extends BaseRepository
         return $this->all(['*'], []);
     }
 
-    public function getAllAdminUsers(): Collection
+    public function getAllUsers($admin = false): Collection
     {
-        return $this->all(['*'], [])->where('is_admin', 1);
+        return $this->all(['*'], [])->where('is_admin', $admin);
     }
 }

@@ -36,9 +36,21 @@ class UserController extends BaseController
      */
     public function getAllAdminUsers(): JsonResponse
     {
-        $users = $this->repository->getAllAdminUsers();
+        $users = $this->repository->getAllUsers(true);
 
         return $this->withCollection($users, $this->transformer);
+    }
+
+    /**
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function getUser(User $user): JsonResponse
+    {
+        if ($user && $user->is_admin) {
+            return $this->withException(['Unauthorized']);
+        }
+        return $this->withItem($user, $this->transformer);
     }
 
     /**
